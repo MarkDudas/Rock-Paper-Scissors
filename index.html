@@ -6,7 +6,30 @@
     <title>Document</title>
 </head>
 <body>
-    <script src="index.js"></script>
+    <script src="index.js" defer></script>
+    <style>
+        .container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+    </style>
 </body>
+    <div class="container">
+        <button id="rock" value="rock">rock</button>
+        <button id="paper" value="paper">paper</button>
+        <button id="scissors" value="paper">scissors</button>
+        
+        <p name="selectedItems">Selected items: </p>
+        <label for="selectedItems" id="selectedItems"></label>
+
+
+        <p class="result">
+        <p id="score">Player: 0, Computer: 0</p>
+
+        </p>
+
+    </div>
 </html>
 

@@ -1,64 +1,69 @@
+let playerWins = 0;
+let computerWins = 0;
+const winLimit = 5;
+
 const getComputerChoice = () => {
     let randomNumber = Math.random();
 
-    if (randomNumber < 0.33){
-        return "rock"
+    if (randomNumber < 0.33) {
+        return "rock";
+    } else if (randomNumber < 0.66) {
+        return "paper";
+    } else {
+        return "scissors";
     }
-    else if (randomNumber < 0.66){
-        return 'paper'
+};
+
+const determineWinner = (humanChoice, computerChoice) => {
+    if (humanChoice === computerChoice) {
+        return "It's a tie!";
     }
-    else {
-        return 'scissors'
+
+    if (
+        (humanChoice === "rock" && computerChoice === "scissors") ||
+        (humanChoice === "scissors" && computerChoice === "paper") ||
+        (humanChoice === "paper" && computerChoice === "rock")
+    ) {
+        playerWins++;
+        return "You win this round!";
+    } else {
+        computerWins++;
+        return "Computer wins this round!";
     }
-}
+};
 
-const getHumanChoice = () => {
-    let validChoice = ['rock','paper','scissors']
-    let choice = prompt("Enter rock paper or scissors")
-    let humanChoice = choice.toLowerCase();
-
-    if ( validChoice.includes(humanChoice)){
-        return humanChoice
+const checkForWinner = () => {
+    if (playerWins === winLimit) {
+        return "Congratulations! You win the game!";
+    } else if (computerWins === winLimit) {
+        return "The computer wins the game! Please try again.";
     }
-    else {
-        alert("Invalid choice please select rock paper or scissors")
-        getHumanChoice()
-    }
-}
+    return null;
+};
 
-const playGame = () => {
-    let humanScore = 0;
-    let computerScore = 0;
+const buttons = document.querySelectorAll('button');
+const selectedItems = document.getElementById("selectedItems");
+const resultParagraph = document.querySelector(".result");
+const scoreParagraph = document.getElementById("score");
 
-    const playRound = (humanChoice, computerChoice) => {
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        if (playerWins < winLimit && computerWins < winLimit) {
+            const humanChoice = button.value;
+            const computerChoice = getComputerChoice();
 
-        if (humanChoice === computerChoice){
-            return "its a tie"
+            selectedItems.textContent = `You selected: ${humanChoice}, Computer selected: ${computerChoice}`;
+
+            const result = determineWinner(humanChoice, computerChoice);
+            resultParagraph.textContent = result;
+
+            scoreParagraph.textContent = `Player: ${playerWins}, Computer: ${computerWins}`;
+
+            const finalResult = checkForWinner();
+            if (finalResult) {
+                resultParagraph.textContent = finalResult;
+                buttons.forEach(btn => btn.disabled = true); // Disable buttons after game ends
+            }
         }
-        else if (
-            (humanChoice === 'rock' && computerChoice === 'scissors')  ||
-            (humanChoice === 'paper' && computerChoice === 'rock')  ||
-            (humanChoice === 'scissors' && computerChoice === 'paper')
-        ){
-            humanScore++
-            return "You win this round!"
-        }
-        else{
-            computerScore++
-            return "Computer win this round"
-        }
-
-    }
-    for(i=0; i<5; i++){
-        const humanSelection = getHumanChoice();
-        const computerSelection = getComputerChoice();
-        const result = playRound(humanSelection, computerSelection);
-        alert(result)
-
-    }
- 
-    alert(`Final score ${humanScore} - ${computerScore}`)
-   
-}
-
-playGame()
+    });
+});
